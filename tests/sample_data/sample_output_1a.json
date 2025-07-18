@@ -1,0 +1,45 @@
+{
+  "title": "Understanding Artificial Intelligence",
+  "outline": [
+    {
+      "H1": "Introduction to AI",
+      "page": 1
+    },
+    {
+      "H2": "Machine Learning Fundamentals",
+      "page": 3
+    },
+    {
+      "H3": "Neural Networks",
+      "page": 5
+    },
+    {
+      "H2": "Deep Learning Applications",
+      "page": 8
+    },
+    {
+      "H3": "Computer Vision",
+      "page": 10
+    },
+    {
+      "H3": "Natural Language Processing",
+      "page": 15
+    },
+    {
+      "H1": "AI in Industry",
+      "page": 20
+    },
+    {
+      "H2": "Healthcare Applications",
+      "page": 22
+    },
+    {
+      "H2": "Financial Services",
+      "page": 28
+    },
+    {
+      "H1": "Future of AI",
+      "page": 35
+    }
+  ]
+}

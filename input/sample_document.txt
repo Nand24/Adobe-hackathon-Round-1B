@@ -1,0 +1,30 @@
+
+Adobe India Hackathon - Challenge Document
+
+Introduction
+This document outlines the challenge requirements for the Adobe India Hackathon.
+
+1. Round 1A: PDF Structure Extraction
+Extract structured outlines from raw PDFs with blazing speed and pinpoint accuracy.
+
+1.1 Requirements
+- Process 50-page PDFs in under 10 seconds
+- Extract hierarchical section structure
+- Identify headings and subheadings accurately
+
+1.2 Output Format
+Return structured JSON with section titles, levels, and page numbers.
+
+2. Round 1B: Document Intelligence
+Build persona-driven intelligence that understands sections and links related ideas together.
+
+2.1 Requirements
+- Process 3-5 documents in under 60 seconds
+- Generate relevant summaries
+- Identify key relationships between sections
+
+2.2 Output Format
+Return JSON with summaries, relevance scores, and related sections.
+
+Conclusion
+These challenges test your ability to build high-performance document processing systems.

@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "persona": "Software Engineer",
+    "job_to_be_done": "Looking for information about hackathon challenges and requirements for document processing systems",
+    "documents_processed": [
+      "sample_document.txt"
+    ],
+    "processing_timestamp": "2025-07-18T15:14:07.077802",
+    "processing_time_seconds": 0.01
+  },
+  "extracted_sections": [
+    {
+      "document": "sample_document.txt",
+      "page_number": 1,
+      "section_title": "Conclusion",
+      "importance_rank": 1
+    }
+  ],
+  "subsection_analysis": [
+    {
+      "document": "sample_document.txt",
+      "page_number": 1,
+      "refined_text": "These challenges test your ability to build high-performance document processing systems."
+    }
+  ]
+}

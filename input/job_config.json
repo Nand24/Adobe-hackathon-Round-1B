@@ -1,0 +1,13 @@
+{
+  "persona": "Software Engineer",
+  "job_description": "Looking for information about hackathon challenges and requirements for document processing systems",
+  "documents": [
+    "sample_document.txt"
+  ],
+  "focus_areas": [
+    "requirements",
+    "technical challenges",
+    "performance constraints",
+    "implementation details"
+  ]
+}
