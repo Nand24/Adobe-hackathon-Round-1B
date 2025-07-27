@@ -1,54 +1,9 @@
 {
-  "title": "Adobe India Hackathon - Challenge Document",
+  "title": "Introduction",
   "outline": [
     {
       "level": "H3",
-      "text": "- Generate relevant summaries",
-      "page": 1
-    },
-    {
-      "level": "H3",
-      "text": "Extract structured outlines from raw PDFs with blazing speed and pinpoint accuracy.",
-      "page": 1
-    },
-    {
-      "level": "H3",
-      "text": "- Identify headings and subheadings accurately",
-      "page": 1
-    },
-    {
-      "level": "H1",
-      "text": "Build persona-driven intelligence that understands sections and links related ideas together.",
-      "page": 1
-    },
-    {
-      "level": "H3",
       "text": "Introduction",
-      "page": 1
-    },
-    {
-      "level": "H1",
-      "text": "- Identify key relationships between sections",
-      "page": 1
-    },
-    {
-      "level": "H3",
-      "text": "Conclusion",
-      "page": 1
-    },
-    {
-      "level": "H3",
-      "text": "Adobe India Hackathon - Challenge Document",
-      "page": 1
-    },
-    {
-      "level": "H3",
-      "text": "These challenges test your ability to build high-performance document processing systems.",
-      "page": 1
-    },
-    {
-      "level": "H3",
-      "text": "- Process 50-page PDFs in under 10 seconds",
       "page": 1
     },
     {
@@ -57,13 +12,18 @@
       "page": 1
     },
     {
-      "level": "H3",
-      "text": "- Process 3-5 documents in under 60 seconds",
+      "level": "H2",
+      "text": "1.1 Requirements",
+      "page": 1
+    },
+    {
+      "level": "H2",
+      "text": "1.2 Output Format",
       "page": 1
     },
     {
       "level": "H1",
-      "text": "Return structured JSON with section titles, levels, and page numbers.",
+      "text": "2. Round 1B: Document Intelligence",
       "page": 1
     },
     {
@@ -73,22 +33,12 @@
     },
     {
       "level": "H2",
-      "text": "1.1 Requirements",
-      "page": 1
-    },
-    {
-      "level": "H1",
-      "text": "2. Round 1B: Document Intelligence",
-      "page": 1
-    },
-    {
-      "level": "H1",
-      "text": "Return JSON with summaries, relevance scores, and related sections.",
+      "text": "2.2 Output Format",
       "page": 1
     },
     {
       "level": "H3",
-      "text": "This document outlines the challenge requirements for the Adobe India Hackathon.",
+      "text": "Conclusion",
       "page": 1
     }
   ]

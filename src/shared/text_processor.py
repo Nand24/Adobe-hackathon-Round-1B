@@ -204,9 +204,24 @@ class TextProcessor:
         return len(intersection) / len(union) if union else 0.0
     
     def is_heading_ml(self, text: str) -> tuple[bool, float]:
-        """Use ML to detect if text is a heading with confidence score"""
+        """Use ML to detect if text is a heading with improved filtering"""
         if not text:
             return False, 0.0
+        
+        text = text.strip()
+        
+        # Quick exclude: obvious non-headings
+        exclude_patterns = [
+            r'^-\s',  # Bullet points
+            r'^\*\s',  # Asterisk bullets  
+            r'^\•\s',  # Bullet symbols
+            r'\.$',   # Ends with period
+            r'^[a-z]',  # Starts lowercase
+        ]
+        
+        for pattern in exclude_patterns:
+            if re.search(pattern, text):
+                return False, 0.0
         
         # Try transformer-based classification
         if self.classifier:
@@ -217,7 +232,7 @@ class TextProcessor:
                 if result and len(result) > 0:
                     # Get the confidence score for the positive class
                     confidence = max(score['score'] for score in result[0])
-                    is_heading = confidence > 0.7  # Threshold for heading detection
+                    is_heading = confidence > 0.75  # Higher threshold for better precision
                     return is_heading, confidence
             except Exception as e:
                 print(f"Warning: ML heading detection failed: {e}")
@@ -226,36 +241,62 @@ class TextProcessor:
         return self._is_heading_rule_based(text)
     
     def _is_heading_rule_based(self, text: str) -> tuple[bool, float]:
-        """Rule-based heading detection with confidence score"""
+        """Rule-based heading detection with confidence score - improved accuracy"""
         if not text or len(text.strip()) < 3:
             return False, 0.0
         
         text = text.strip()
         confidence = 0.0
         
-        # Check for common heading patterns
-        heading_patterns = [
-            (r'^\d+\.\s*[A-Z]', 0.9),  # Numbered sections
-            (r'^[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*$', 0.8),  # Title case
-            (r'^[A-Z\s]+$', 0.7),  # All caps
-            (r'^\w+:', 0.6),  # Colon-terminated
-            (r'^[A-Z]', 0.5),  # Starts with capital
+        # EXCLUDE: Common non-heading patterns
+        exclude_patterns = [
+            r'^-\s',  # Bullet points starting with dash
+            r'^\*\s',  # Bullet points starting with asterisk  
+            r'^\•\s',  # Bullet points starting with bullet
+            r'^\d+\)\s',  # Numbered lists with parentheses
+            r'^[a-z]',  # Starts with lowercase (likely not heading)
+            r'\.$',  # Ends with period (likely sentence)
+            r'[,;:]$',  # Ends with punctuation
         ]
         
-        for pattern, score in heading_patterns:
+        # If matches exclude patterns, not a heading
+        for pattern in exclude_patterns:
+            if re.search(pattern, text):
+                return False, 0.0
+        
+        # STRONG heading indicators
+        strong_patterns = [
+            (r'^\d+\.\s*[A-Z][^.]*$', 0.95),  # "1. Introduction" (no ending period)
+            (r'^\d+\.\d+\s*[A-Z][^.]*$', 0.9),  # "1.1 Overview" 
+            (r'^(Chapter|Section|Part)\s+\d+', 0.95),  # "Chapter 1", "Section 2"
+            (r'^(Introduction|Conclusion|Summary|Abstract|Methodology|Results|Discussion)$', 0.9),  # Common headings
+        ]
+        
+        for pattern, score in strong_patterns:
+            if re.match(pattern, text, re.IGNORECASE):
+                confidence = max(confidence, score)
+        
+        # MEDIUM heading indicators
+        medium_patterns = [
+            (r'^[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,4}$', 0.7),  # Title Case (max 5 words)
+            (r'^[A-Z\s]{3,20}$', 0.6),  # ALL CAPS (3-20 chars)
+        ]
+        
+        for pattern, score in medium_patterns:
             if re.match(pattern, text):
                 confidence = max(confidence, score)
         
-        # Length factor (headings are usually shorter)
-        if len(text) < 80 and not text.endswith('.'):
+        # Length and structure bonuses
+        if 5 <= len(text) <= 60 and not text.endswith('.'):  # Reasonable heading length
+            confidence += 0.1
+        
+        # Common heading words bonus
+        heading_words = ['introduction', 'conclusion', 'summary', 'abstract', 'overview', 'background']
+        if any(word in text.lower() for word in heading_words):
             confidence += 0.2
         
-        # Position factor (if first words are common heading words)
-        heading_words = ['introduction', 'conclusion', 'summary', 'abstract', 'chapter', 'section']
-        if any(word in text.lower() for word in heading_words):
-            confidence += 0.3
-        
-        return confidence > 0.5, min(confidence, 1.0)
+        # Final threshold - be more selective
+        return confidence >= 0.65, min(confidence, 1.0)
     
     def extract_action_words(self, text: str) -> List[str]:
         """Extract action words (verbs) from text"""
