@@ -1,0 +1,55 @@
+{
+  "title": "Introduction",
+  "outline": [
+    {
+      "section_title": "Introduction",
+      "level": 3,
+      "page_number": 1,
+      "subsections": []
+    },
+    {
+      "section_title": "1. Round 1A: PDF Structure Extraction",
+      "level": 1,
+      "page_number": 1,
+      "subsections": []
+    },
+    {
+      "section_title": "2. Round 1B: Document Intelligence",
+      "level": 1,
+      "page_number": 1,
+      "subsections": [
+        {
+          "section_title": "Conclusion",
+          "level": 3,
+          "page_number": 1,
+          "subsections": []
+        }
+      ]
+    },
+    {
+      "section_title": "Return structured JSON with section titles, levels, and page numbers.",
+      "level": 1,
+      "page_number": 1,
+      "subsections": []
+    },
+    {
+      "section_title": "Build persona-driven intelligence that understands sections and links related ideas together.",
+      "level": 1,
+      "page_number": 1,
+      "subsections": []
+    },
+    {
+      "section_title": "Return JSON with summaries, relevance scores, and related sections.",
+      "level": 1,
+      "page_number": 1,
+      "subsections": [
+        {
+          "section_title": "Adobe India Hackathon - Challenge Document",
+          "level": 3,
+          "page_number": 1,
+          "subsections": []
+        }
+      ]
+    }
+  ]
+}

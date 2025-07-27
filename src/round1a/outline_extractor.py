@@ -61,7 +61,7 @@ class OutlineExtractor:
         return ""
     
     def _build_outline_structure(self, headings: List[Dict]) -> List[Dict]:
-        """Build hierarchical outline structure from headings"""
+        """Build outline structure in Adobe's exact format: {"level": "H1", "text": "...", "page": 1}"""
         if not headings:
             return []
         
@@ -69,40 +69,20 @@ class OutlineExtractor:
         sorted_headings = sorted(headings, key=lambda h: (h['page_num'], h['bbox'][1]))
         
         outline = []
-        current_h1 = None
-        current_h2 = None
         
         for heading in sorted_headings:
             level = heading['level']
-            section_info = {
-                "section_title": heading['text'],
-                "level": level,
-                "page_number": heading['page_num'],
-                "subsections": []
-            }
             
-            if level == 1:
-                # Top level heading
-                outline.append(section_info)
-                current_h1 = section_info
-                current_h2 = None
-            elif level == 2 and current_h1:
-                # Second level heading
-                current_h1["subsections"].append(section_info)
-                current_h2 = section_info
-            elif level == 3 and current_h2:
-                # Third level heading
-                current_h2["subsections"].append(section_info)
-            elif level >= 4:
-                # Fourth level or deeper - add to current context
-                if current_h2:
-                    current_h2["subsections"].append(section_info)
-                elif current_h1:
-                    current_h1["subsections"].append(section_info)
-                else:
-                    outline.append(section_info)
-            else:
-                # Fallback: add as top-level if no context
-                outline.append(section_info)
+            # Convert level to Adobe's string format (H1, H2, H3)
+            level_mapping = {1: "H1", 2: "H2", 3: "H3"}
+            level_str = level_mapping.get(level, f"H{min(level, 3)}")  # Cap at H3 per Adobe spec
+            
+            # Adobe's exact required format
+            outline_item = {
+                "level": level_str,
+                "text": heading['text'], 
+                "page": heading['page_num']
+            }
+            outline.append(outline_item)
         
         return outline

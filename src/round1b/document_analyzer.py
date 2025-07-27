@@ -16,15 +16,31 @@ from .persona_processor import PersonaProcessor
 from .relevance_ranker import RelevanceRanker
 from .section_extractor import SectionExtractor
 
+# Try to import ML-enhanced ranker
+try:
+    from .ml_relevance_ranker import MLRelevanceRanker
+    ML_RANKER_AVAILABLE = True
+except ImportError:
+    ML_RANKER_AVAILABLE = False
+    print("Warning: ML Relevance Ranker not available, using basic ranker.")
+
 
 class DocumentAnalyzer:
     """Main class for persona-driven document analysis"""
     
     def __init__(self):
+        """Initialize document analyzer with ML-enhanced components"""
         self.text_processor = TextProcessor()
         self.persona_processor = PersonaProcessor()
-        self.relevance_ranker = RelevanceRanker()
         self.section_extractor = SectionExtractor()
+        
+        # Use ML-enhanced ranker if available
+        if ML_RANKER_AVAILABLE:
+            self.relevance_ranker = MLRelevanceRanker()
+            print("✓ Using ML-enhanced relevance ranking")
+        else:
+            self.relevance_ranker = RelevanceRanker()
+            print("⚠ Using basic relevance ranking")
     
     def analyze_documents(self, pdf_files: List[Path], persona: str, job_to_be_done: str) -> Dict[str, Any]:
         """Analyze document collection based on persona and job requirements"""

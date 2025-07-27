@@ -2,94 +2,94 @@
   "title": "Adobe India Hackathon - Challenge Document",
   "outline": [
     {
-      "section_title": "Adobe India Hackathon - Challenge Document",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "- Generate relevant summaries",
+      "page": 1
     },
     {
-      "section_title": "Introduction",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "Extract structured outlines from raw PDFs with blazing speed and pinpoint accuracy.",
+      "page": 1
     },
     {
-      "section_title": "1. Round 1A: PDF Structure Extraction",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "- Identify headings and subheadings accurately",
+      "page": 1
     },
     {
-      "section_title": "1.1 Requirements",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H1",
+      "text": "Build persona-driven intelligence that understands sections and links related ideas together.",
+      "page": 1
     },
     {
-      "section_title": "- Process 50-page PDFs in under 10 seconds",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "Introduction",
+      "page": 1
     },
     {
-      "section_title": "- Extract hierarchical section structure",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H1",
+      "text": "- Identify key relationships between sections",
+      "page": 1
     },
     {
-      "section_title": "- Identify headings and subheadings accurately",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "Conclusion",
+      "page": 1
     },
     {
-      "section_title": "1.2 Output Format",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "Adobe India Hackathon - Challenge Document",
+      "page": 1
     },
     {
-      "section_title": "2. Round 1B: Document Intelligence",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "These challenges test your ability to build high-performance document processing systems.",
+      "page": 1
     },
     {
-      "section_title": "2.1 Requirements",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "- Process 50-page PDFs in under 10 seconds",
+      "page": 1
     },
     {
-      "section_title": "- Process 3-5 documents in under 60 seconds",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H1",
+      "text": "1. Round 1A: PDF Structure Extraction",
+      "page": 1
     },
     {
-      "section_title": "- Generate relevant summaries",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H3",
+      "text": "- Process 3-5 documents in under 60 seconds",
+      "page": 1
     },
     {
-      "section_title": "- Identify key relationships between sections",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H1",
+      "text": "Return structured JSON with section titles, levels, and page numbers.",
+      "page": 1
     },
     {
-      "section_title": "2.2 Output Format",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H2",
+      "text": "2.1 Requirements",
+      "page": 1
     },
     {
-      "section_title": "Conclusion",
-      "level": 2,
-      "page_number": 1,
-      "subsections": []
+      "level": "H2",
+      "text": "1.1 Requirements",
+      "page": 1
+    },
+    {
+      "level": "H1",
+      "text": "2. Round 1B: Document Intelligence",
+      "page": 1
+    },
+    {
+      "level": "H1",
+      "text": "Return JSON with summaries, relevance scores, and related sections.",
+      "page": 1
+    },
+    {
+      "level": "H3",
+      "text": "This document outlines the challenge requirements for the Adobe India Hackathon.",
+      "page": 1
     }
   ]
 }

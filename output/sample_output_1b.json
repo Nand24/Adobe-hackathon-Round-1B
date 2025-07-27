@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "persona": "PhD Researcher in Computer Science",
+    "job_to_be_done": "Prepare comprehensive literature review on document processing methodologies",
+    "documents_processed": [
+      "sample_document.txt"
+    ],
+    "processing_timestamp": "2025-07-18T12:00:00Z",
+    "processing_time_seconds": 0.02
+  },
+  "extracted_sections": [
+    {
+      "document": "sample_document.txt",
+      "page_number": 1,
+      "section_title": "1. Round 1A: PDF Structure Extraction",
+      "importance_rank": 1
+    },
+    {
+      "document": "sample_document.txt",
+      "page_number": 1,
+      "section_title": "2. Round 1B: Document Intelligence",
+      "importance_rank": 2
+    },
+    {
+      "document": "sample_document.txt",
+      "page_number": 1,
+      "section_title": "Introduction",
+      "importance_rank": 3
+    }
+  ],
+  "subsection_analysis": [
+    {
+      "document": "sample_document.txt",
+      "page_number": 1,
+      "refined_text": "Extract structured outlines from raw PDFs with blazing speed and pinpoint accuracy."
+    },
+    {
+      "document": "sample_document.txt",
+      "page_number": 1,
+      "refined_text": "Build persona-driven intelligence that understands sections and links related ideas together."
+    }
+  ]
+}

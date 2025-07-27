@@ -21,7 +21,9 @@ RUN python -m spacy download en_core_web_sm
 
 # Copy source code
 COPY src/ ./src/
-COPY models/ ./models/
+
+# Create models directory for ML model cache
+RUN mkdir -p ./models
 
 # Create input and output directories
 RUN mkdir -p /app/input /app/output
@@ -30,5 +32,5 @@ RUN mkdir -p /app/input /app/output
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
 
-# Default command - can be overridden
-CMD ["python", "src/main.py"]
+# Default command - Adobe spec: automatically process /app/input to /app/output
+CMD ["python", "src/main.py", "--round", "1a", "--input", "/app/input", "--output", "/app/output"]

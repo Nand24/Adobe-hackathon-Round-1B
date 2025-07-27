@@ -8,21 +8,64 @@ import sys
 import argparse
 import json
 import time
+import signal
 from pathlib import Path
 
 # Add src to Python path
 sys.path.insert(0, os.path.dirname(__file__))
 
 from round1a.outline_extractor import OutlineExtractor
+from round1a.ml_outline_extractor import MLOutlineExtractor
 from round1b.document_analyzer import DocumentAnalyzer
+from round1b.ml_relevance_ranker import MLRelevanceRanker
 from shared.config import Config
 
 
+class TimeoutError(Exception):
+    pass
+
+
+def timeout_handler(signum, frame):
+    raise TimeoutError("Processing timeout exceeded")
+
+
+def process_with_timeout(func, timeout_seconds, *args, **kwargs):
+    """Execute function with timeout protection for Adobe constraints"""
+    try:
+        # Set up timeout signal (Unix/Linux only)
+        if hasattr(signal, 'SIGALRM'):
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(timeout_seconds)
+        
+        result = func(*args, **kwargs)
+        
+        if hasattr(signal, 'SIGALRM'):
+            signal.alarm(0)  # Cancel alarm
+        
+        return result, None
+        
+    except TimeoutError:
+        return {"title": "", "outline": []}, f"Timeout: Processing exceeded {timeout_seconds}s limit"
+    except Exception as e:
+        if hasattr(signal, 'SIGALRM'):
+            signal.alarm(0)  # Cancel alarm
+        return {"title": "", "outline": []}, str(e)
+
+
 def process_round1a(input_dir: str, output_dir: str):
-    """Process Round 1A: Extract outlines from PDFs"""
+    """Process Round 1A: Extract outlines from PDFs using ML-enhanced approach"""
     print("Starting Round 1A: Document Outline Extraction")
     
-    extractor = OutlineExtractor()
+    # Try ML-enhanced extractor first, fallback to basic
+    try:
+        extractor = MLOutlineExtractor()
+        ml_available = True
+        print("✓ Using ML-enhanced outline extraction")
+    except Exception as e:
+        print(f"Warning: ML extractor failed, using basic extractor: {e}")
+        extractor = OutlineExtractor()
+        ml_available = False
+    
     input_path = Path(input_dir)
     output_path = Path(output_dir)
     

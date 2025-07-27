@@ -15,18 +15,58 @@ except ImportError:
     SPACY_AVAILABLE = False
     print("Warning: spaCy not available. Using basic text processing.")
 
+# Try to import transformers for advanced ML capabilities
+try:
+    from transformers import pipeline, AutoTokenizer, AutoModel
+    import torch
+    TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    TRANSFORMERS_AVAILABLE = False
+    print("Warning: Transformers not available. Using basic text processing.")
+
+# Try to import sentence-transformers for semantic similarity
+try:
+    from sentence_transformers import SentenceTransformer
+    SENTENCE_TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    SENTENCE_TRANSFORMERS_AVAILABLE = False
+    print("Warning: Sentence-transformers not available. Using basic similarity.")
+
 
 class TextProcessor:
-    """Utility class for text processing and NLP tasks"""
+    """Utility class for text processing and NLP tasks with ML enhancement"""
     
     def __init__(self):
-        """Initialize with spaCy model if available"""
+        """Initialize with ML models if available"""
         self.nlp = None
+        self.classifier = None
+        self.sentence_model = None
+        
+        # Initialize spaCy
         if SPACY_AVAILABLE:
             try:
                 self.nlp = spacy.load("en_core_web_sm")
             except OSError:
-                print("Warning: spaCy model not found. Using basic text processing.")
+                try:
+                    self.nlp = spacy.load("en_core_web_md")
+                except OSError:
+                    print("Warning: spaCy model not found. Using basic text processing.")
+        
+        # Initialize transformers classifier for heading detection
+        if TRANSFORMERS_AVAILABLE:
+            try:
+                self.classifier = pipeline("text-classification", 
+                                         model="distilbert-base-uncased-finetuned-sst-2-english",
+                                         return_all_scores=True)
+            except Exception as e:
+                print(f"Warning: Could not load transformer classifier: {e}")
+        
+        # Initialize sentence transformer for semantic similarity
+        if SENTENCE_TRANSFORMERS_AVAILABLE:
+            try:
+                self.sentence_model = SentenceTransformer('all-MiniLM-L6-v2')
+            except Exception as e:
+                print(f"Warning: Could not load sentence transformer: {e}")
                 self.nlp = None
     
     def clean_text(self, text: str) -> str:
@@ -112,33 +152,110 @@ class TextProcessor:
             return entities
     
     def get_sentence_embeddings(self, sentences: List[str]) -> List:
-        """Get sentence embeddings (placeholder for actual implementation)"""
-        # This would use sentence-transformers in actual implementation
-        # For now, return empty list as placeholder
+        """Get sentence embeddings using ML models when available"""
+        if not sentences:
+            return []
+        
+        if self.sentence_model:
+            # Use sentence-transformers for high-quality embeddings
+            try:
+                embeddings = self.sentence_model.encode(sentences)
+                return embeddings.tolist()
+            except Exception as e:
+                print(f"Warning: Sentence embedding failed: {e}")
+        
+        # Fallback: return empty list
         return []
     
     def calculate_text_similarity(self, text1: str, text2: str) -> float:
-        """Calculate similarity between two texts"""
+        """Calculate similarity between two texts using ML when available"""
         if not text1 or not text2:
             return 0.0
         
+        # Try sentence-transformers first (most accurate)
+        if self.sentence_model:
+            try:
+                embeddings = self.sentence_model.encode([text1, text2])
+                from sklearn.metrics.pairwise import cosine_similarity
+                similarity = cosine_similarity([embeddings[0]], [embeddings[1]])[0][0]
+                return float(similarity)
+            except Exception as e:
+                print(f"Warning: ML similarity failed: {e}")
+        
+        # Try spaCy similarity (good accuracy)
         if self.nlp:
-            doc1 = self.nlp(text1)
-            doc2 = self.nlp(text2)
-            
-            return doc1.similarity(doc2)
-        else:
-            # Basic similarity using word overlap
-            words1 = set(re.findall(r'\b\w+\b', text1.lower()))
-            words2 = set(re.findall(r'\b\w+\b', text2.lower()))
-            
-            if not words1 or not words2:
-                return 0.0
-            
-            intersection = words1.intersection(words2)
-            union = words1.union(words2)
-            
-            return len(intersection) / len(union) if union else 0.0
+            try:
+                doc1 = self.nlp(text1)
+                doc2 = self.nlp(text2)
+                return doc1.similarity(doc2)
+            except Exception as e:
+                print(f"Warning: spaCy similarity failed: {e}")
+        
+        # Fallback: Enhanced word overlap similarity
+        words1 = set(re.findall(r'\b\w+\b', text1.lower()))
+        words2 = set(re.findall(r'\b\w+\b', text2.lower()))
+        
+        if not words1 or not words2:
+            return 0.0
+        
+        intersection = words1.intersection(words2)
+        union = words1.union(words2)
+        
+        return len(intersection) / len(union) if union else 0.0
+    
+    def is_heading_ml(self, text: str) -> tuple[bool, float]:
+        """Use ML to detect if text is a heading with confidence score"""
+        if not text:
+            return False, 0.0
+        
+        # Try transformer-based classification
+        if self.classifier:
+            try:
+                # Use the classifier to assess "importance" of the text
+                # Higher confidence in positive sentiment often correlates with headings
+                result = self.classifier(text)
+                if result and len(result) > 0:
+                    # Get the confidence score for the positive class
+                    confidence = max(score['score'] for score in result[0])
+                    is_heading = confidence > 0.7  # Threshold for heading detection
+                    return is_heading, confidence
+            except Exception as e:
+                print(f"Warning: ML heading detection failed: {e}")
+        
+        # Fallback to rule-based detection
+        return self._is_heading_rule_based(text)
+    
+    def _is_heading_rule_based(self, text: str) -> tuple[bool, float]:
+        """Rule-based heading detection with confidence score"""
+        if not text or len(text.strip()) < 3:
+            return False, 0.0
+        
+        text = text.strip()
+        confidence = 0.0
+        
+        # Check for common heading patterns
+        heading_patterns = [
+            (r'^\d+\.\s*[A-Z]', 0.9),  # Numbered sections
+            (r'^[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*$', 0.8),  # Title case
+            (r'^[A-Z\s]+$', 0.7),  # All caps
+            (r'^\w+:', 0.6),  # Colon-terminated
+            (r'^[A-Z]', 0.5),  # Starts with capital
+        ]
+        
+        for pattern, score in heading_patterns:
+            if re.match(pattern, text):
+                confidence = max(confidence, score)
+        
+        # Length factor (headings are usually shorter)
+        if len(text) < 80 and not text.endswith('.'):
+            confidence += 0.2
+        
+        # Position factor (if first words are common heading words)
+        heading_words = ['introduction', 'conclusion', 'summary', 'abstract', 'chapter', 'section']
+        if any(word in text.lower() for word in heading_words):
+            confidence += 0.3
+        
+        return confidence > 0.5, min(confidence, 1.0)
     
     def extract_action_words(self, text: str) -> List[str]:
         """Extract action words (verbs) from text"""
