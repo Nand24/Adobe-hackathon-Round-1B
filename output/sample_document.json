@@ -1,9 +1,19 @@
 {
-  "title": "Introduction",
+  "title": "Adobe India Hackathon - Challenge Document",
   "outline": [
     {
       "level": "H3",
       "text": "Introduction",
+      "page": 1
+    },
+    {
+      "level": "H3",
+      "text": "Conclusion",
+      "page": 1
+    },
+    {
+      "level": "H3",
+      "text": "Adobe India Hackathon - Challenge Document",
       "page": 1
     },
     {
@@ -13,32 +23,17 @@
     },
     {
       "level": "H2",
-      "text": "1.1 Requirements",
-      "page": 1
-    },
-    {
-      "level": "H2",
-      "text": "1.2 Output Format",
-      "page": 1
-    },
-    {
-      "level": "H1",
-      "text": "2. Round 1B: Document Intelligence",
-      "page": 1
-    },
-    {
-      "level": "H2",
       "text": "2.1 Requirements",
       "page": 1
     },
     {
       "level": "H2",
-      "text": "2.2 Output Format",
+      "text": "1.1 Requirements",
       "page": 1
     },
     {
-      "level": "H3",
-      "text": "Conclusion",
+      "level": "H1",
+      "text": "2. Round 1B: Document Intelligence",
       "page": 1
     }
   ]

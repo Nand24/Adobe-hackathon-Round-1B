@@ -47,12 +47,33 @@ def extract_pdf_content(file_path: str) -> Dict:
     if not PYMUPDF_AVAILABLE:
         raise ImportError("PyMuPDF not available")
     
-    # Original PDF processing logic would go here
-    # For now, return empty structure
+    import fitz  # PyMuPDF
+    doc = fitz.open(file_path)
+    text_blocks = []
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        blocks = page.get_text("blocks")
+        for b in blocks:
+            x0, y0, x1, y1, text, block_no, block_type = b[:7]
+            cleaned_text = clean_text(text)  # <--- Clean the text here
+            if cleaned_text:
+                text_block = TextBlock(
+                    text=cleaned_text,
+                    page_num=page_num + 1,
+                    bbox=(x0, y0, x1, y1),
+                    font_size=12.0,
+                    font_name="Unknown",
+                    font_flags=0,
+                    line_height=14.0
+                )
+                text_blocks.append(text_block)
+    from shared.text_utils import detect_headings_from_text, get_text_statistics
+    headings = detect_headings_from_text(text_blocks)
+    statistics = get_text_statistics(text_blocks)
     return {
-        'text_blocks': [],
-        'headings': [],
-        'statistics': {'total_blocks': 0, 'avg_font_size': 12.0, 'font_sizes': [12.0]}
+        'text_blocks': text_blocks,
+        'headings': headings,
+        'statistics': statistics
     }
 
 
