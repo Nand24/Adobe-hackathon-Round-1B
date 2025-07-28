@@ -52,9 +52,9 @@ class SectionExtractor:
         
         for i, item in enumerate(outline_items):
             # Get section information from outline item
-            title = item.get("section_title", "")
-            level = item.get("level", 1)
-            page_num = item.get("page_number", 1)
+            title = item.get("text", "")
+            level = item.get("level", "H1")
+            page_num = item.get("page", 1)
             
             if not title:
                 continue

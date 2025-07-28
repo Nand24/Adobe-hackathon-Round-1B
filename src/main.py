@@ -158,8 +158,8 @@ def process_round1b(input_dir: str, output_dir: str):
         # Analyze documents based on persona and job
         analysis_result = analyzer.analyze_documents(
             pdf_files=all_files,  # Updated to handle both PDF and text files
-            persona=job_config.get("persona", ""),
-            job_to_be_done=job_config.get("job_description", "")
+            persona=job_config.get("persona", {}).get("role", ""),
+            job_to_be_done=job_config.get("job_to_be_done", {}).get("task", "")
         )
         
         # Save results

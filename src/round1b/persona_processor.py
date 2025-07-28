@@ -21,7 +21,10 @@ class PersonaProcessor:
             "journalist": {"news", "article", "report", "story", "interview", "source", "media", "press", "journalism"},
             "entrepreneur": {"business", "startup", "market", "opportunity", "strategy", "growth", "innovation", "venture"},
             "developer": {"code", "software", "programming", "development", "technical", "system", "application", "framework"},
-            "manager": {"team", "project", "management", "leadership", "strategy", "planning", "execution", "operations"}
+            "manager": {"team", "project", "management", "leadership", "strategy", "planning", "execution", "operations"},
+            "travel planner": {"travel", "trip", "destination", "itinerary", "activities", "attractions", "hotels", "restaurants", "transport", "booking", "vacation", "tourism", "sightseeing", "accommodation", "flight", "guide", "explore", "visit", "experience"},
+            "tourist": {"travel", "vacation", "sightseeing", "attractions", "culture", "local", "experience", "explore", "visit", "leisure", "holiday"},
+            "traveler": {"journey", "destination", "adventure", "culture", "local", "experience", "explore", "discover", "immerse"}
         }
         
         # Action words for different job types
@@ -31,7 +34,8 @@ class PersonaProcessor:
             "compare": {"compare", "contrast", "difference", "similarity", "versus", "benchmark"},
             "identify": {"identify", "find", "locate", "discover", "detect", "recognize"},
             "prepare": {"prepare", "create", "develop", "build", "design", "construct"},
-            "learn": {"learn", "understand", "study", "master", "comprehend", "grasp"}
+            "learn": {"learn", "understand", "study", "master", "comprehend", "grasp"},
+            "plan": {"plan", "organize", "schedule", "arrange", "coordinate", "itinerary", "trip", "travel", "book", "reserve"}
         }
     
     def process_persona(self, persona: str, job_to_be_done: str) -> Dict:
@@ -53,6 +57,8 @@ class PersonaProcessor:
     
     def _extract_role(self, persona: str) -> str:
         """Extract the primary role from persona description"""
+        if not persona:
+            return "general"
         persona_lower = persona.lower()
         
         # Direct role matching
@@ -68,7 +74,10 @@ class PersonaProcessor:
             "journalist": r"(journalist|reporter|writer|media)",
             "entrepreneur": r"(entrepreneur|founder|startup|business owner)",
             "developer": r"(developer|programmer|engineer|coder)",
-            "manager": r"(manager|director|executive|lead)"
+            "manager": r"(manager|director|executive|lead)",
+            "travel planner": r"(travel planner|trip planner|travel agent|travel advisor)",
+            "tourist": r"(tourist|vacationer|visitor)",
+            "traveler": r"(traveler|traveller|backpacker|explorer)"
         }
         
         for role, pattern in role_patterns.items():
@@ -90,7 +99,8 @@ class PersonaProcessor:
             "business": ["business", "management", "marketing", "sales"],
             "education": ["education", "teaching", "academic", "school"],
             "engineering": ["engineering", "mechanical", "electrical", "civil"],
-            "law": ["law", "legal", "attorney", "lawyer"]
+            "law": ["law", "legal", "attorney", "lawyer"],
+            "travel": ["travel", "tourism", "hospitality", "destination", "vacation", "trip", "journey"]
         }
         
         for domain, keywords in domains.items():

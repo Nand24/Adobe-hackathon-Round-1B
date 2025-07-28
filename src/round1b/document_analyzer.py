@@ -68,11 +68,10 @@ class DocumentAnalyzer:
             # Build final output
             result = {
                 "metadata": {
+                    "input_documents": [str(f.name) for f in pdf_files],
                     "persona": persona,
                     "job_to_be_done": job_to_be_done,
-                    "documents_processed": [str(f.name) for f in pdf_files],
-                    "processing_timestamp": datetime.now().isoformat(),
-                    "processing_time_seconds": round(time.time() - start_time, 2)
+                    "processing_timestamp": datetime.now().isoformat()
                 },
                 "extracted_sections": self._format_extracted_sections(ranked_sections),
                 "subsection_analysis": subsection_analysis
@@ -92,7 +91,7 @@ class DocumentAnalyzer:
         """Analyze and refine sub-sections"""
         subsection_analysis = []
         
-        for section in ranked_sections[:10]:  # Analyze top 10 sections
+        for section in ranked_sections[:5]:  # Analyze top 5 sections only
             # Extract sub-sections from the main section
             subsections = self.section_extractor.extract_subsections(
                 section["content"], 
@@ -114,7 +113,7 @@ class DocumentAnalyzer:
                         "refined_text": refined_text
                     })
         
-        return subsection_analysis[:20]  # Limit to top 20 sub-sections
+        return subsection_analysis[:5]  # Limit to top 5 sub-sections
     
     def _refine_subsection_text(self, content: str, persona_profile: Dict) -> str:
         """Refine sub-section text based on persona requirements"""
@@ -176,12 +175,12 @@ class DocumentAnalyzer:
         """Format sections for final output"""
         formatted_sections = []
         
-        for i, section in enumerate(ranked_sections[:15]):  # Top 15 sections
+        for i, section in enumerate(ranked_sections[:5]):  # Top 5 sections only
             formatted_section = {
                 "document": section["document"],
-                "page_number": section["page"],
                 "section_title": section["title"],
-                "importance_rank": i + 1
+                "importance_rank": i + 1,
+                "page_number": section["page"]
             }
             formatted_sections.append(formatted_section)
         

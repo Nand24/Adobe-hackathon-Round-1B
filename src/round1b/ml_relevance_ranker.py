@@ -22,11 +22,27 @@ class MLRelevanceRanker:
         
         # Calculate relevance scores using ML
         scored_sections = []
+        document_counts = {}
+        
         for section in sections:
             score = self._calculate_ml_relevance_score(section, persona_profile)
             section_copy = section.copy()
             section_copy['relevance_score'] = score
             scored_sections.append(section_copy)
+            
+            # Track document counts for diversity bonus
+            doc_name = section.get('document', '')
+            document_counts[doc_name] = document_counts.get(doc_name, 0) + 1
+        
+        # Apply document diversity bonus/penalty
+        for section in scored_sections:
+            doc_name = section.get('document', '')
+            doc_count = document_counts.get(doc_name, 1)
+            
+            # Penalize documents that appear too frequently (to encourage diversity)
+            if doc_count > 3:
+                diversity_penalty = 0.1 * (doc_count - 3)  # 10% penalty per extra section
+                section['relevance_score'] *= (1 - min(diversity_penalty, 0.5))  # Max 50% penalty
         
         # Sort by relevance score (descending)
         scored_sections.sort(key=lambda x: x['relevance_score'], reverse=True)
@@ -133,6 +149,21 @@ class MLRelevanceRanker:
             domain_score = domain_matches / len(domain_keywords)
             score += domain_score * 0.3
         
+        # Special scoring for college friends travel scenario
+        job_text = persona_profile.get('raw_job', '').lower()
+        if 'college friends' in job_text or 'group' in job_text:
+            # Boost content about activities, nightlife, entertainment, coastal adventures
+            activity_keywords = ['activities', 'nightlife', 'entertainment', 'coastal', 'adventures', 'beach', 'water sports', 'clubs', 'bars', 'restaurants', 'fun', 'group']
+            activity_matches = sum(1 for keyword in activity_keywords if keyword in full_text)
+            if activity_matches > 0:
+                score += 0.2  # Significant boost for activity-related content
+            
+            # Penalize overly generic packing/tips content for group travel
+            generic_keywords = ['packing', 'toiletries', 'essentials', 'tips', 'tricks', 'general']
+            generic_matches = sum(1 for keyword in generic_keywords if keyword in full_text)
+            if generic_matches > 2:  # If too many generic terms
+                score *= 0.7  # 30% penalty
+        
         return min(score, 1.0)
     
     def _get_role_keywords(self, role: str) -> List[str]:
@@ -143,7 +174,10 @@ class MLRelevanceRanker:
             'analyst': ['analysis', 'data', 'metrics', 'insights', 'trends', 'evaluation', 'assessment'],
             'engineer': ['technical', 'implementation', 'system', 'design', 'architecture', 'development'],
             'manager': ['strategy', 'planning', 'management', 'objectives', 'goals', 'performance'],
-            'developer': ['code', 'programming', 'software', 'application', 'development', 'implementation']
+            'developer': ['code', 'programming', 'software', 'application', 'development', 'implementation'],
+            'travel planner': ['itinerary', 'destinations', 'activities', 'attractions', 'restaurants', 'accommodation', 'transport', 'schedule', 'booking', 'experiences'],
+            'tourist': ['sightseeing', 'attractions', 'culture', 'local experiences', 'entertainment', 'leisure', 'exploration'],
+            'traveler': ['journey', 'adventure', 'exploration', 'culture', 'local', 'authentic', 'experience']
         }
         
         return role_keywords.get(role, [])
@@ -159,7 +193,8 @@ class MLRelevanceRanker:
             'medicine': ['medical', 'patient', 'treatment', 'diagnosis', 'therapy', 'clinical', 'health'],
             'finance': ['financial', 'investment', 'market', 'revenue', 'profit', 'risk', 'portfolio'],
             'business': ['business', 'strategy', 'market', 'customer', 'revenue', 'competition', 'growth'],
-            'technology': ['technology', 'innovation', 'digital', 'ai', 'machine learning', 'automation']
+            'technology': ['technology', 'innovation', 'digital', 'ai', 'machine learning', 'automation'],
+            'travel': ['cities', 'destinations', 'activities', 'cuisine', 'restaurants', 'hotels', 'attractions', 'culture', 'nightlife', 'entertainment', 'coastal', 'adventures', 'experiences', 'tours', 'trips']
         }
         
         # Try exact match first

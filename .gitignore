@@ -70,7 +70,6 @@ Thumbs.db
 
 # Project specific
 models/
-*.pdf
 output/*.json
 !output/sample_*.json
 logs/
