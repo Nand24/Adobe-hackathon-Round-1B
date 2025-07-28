@@ -44,6 +44,7 @@ def extract_pdf_content(file_path: str) -> Dict:
     """
     Extract content from PDF file using PyMuPDF
     """
+    ## added pdf extraction logic
     if not PYMUPDF_AVAILABLE:
         raise ImportError("PyMuPDF not available")
     
