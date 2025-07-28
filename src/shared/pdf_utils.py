@@ -158,10 +158,36 @@ class PDFUtils:
         return clean_text(text)
     
     @staticmethod
+    # def is_likely_heading(text: str) -> bool:
+    #     """Check if text looks like a heading"""
+    #     return is_likely_heading(text)
     def is_likely_heading(text: str) -> bool:
-        """Check if text looks like a heading"""
-        return is_likely_heading(text)
-    
+        """Check if text looks like a heading with stricter H3 rules"""
+        ## added stricter H3 rules
+        if not text or len(text.strip()) < 3:
+            return False
+
+        text = text.strip()
+
+        # Numbered sections
+        if re.match(r'^\d+(\.\d+)*\.?\s+\w+', text):
+            return True
+
+        # All caps
+        if text.isupper() and len(text.split()) <= 6:
+            return True
+
+        # Short title-case phrase (improved H3)
+        words = text.split()
+        if (
+            2 <= len(words) <= 6 and
+            not text.endswith(('.', ',', ';', ':')) and
+            all(w[0].isupper() for w in words if w and w[0].isalpha()) and
+            not any(w.lower() in {'the', 'and', 'for', 'with', 'from', 'that', 'this', 'will', 'must', 'should', 'could'} for w in words)
+        ):
+            return True
+
+        return False
     @staticmethod
     def get_document_stats(text_blocks: List[TextBlock]) -> Dict:
         """Get document statistics"""

@@ -103,7 +103,46 @@ def detect_headings_from_text(text_blocks: List[TextBlock]) -> List[Dict]:
     
     return headings
 
-
+def is_valid_h3_heading(text: str) -> bool:
+    """
+    Very strict validation for H3 headings
+    """
+    words = text.split()
+    
+    # Must be 2-5 words only
+    if not (2 <= len(words) <= 5):
+        return False
+    
+    # Must not end with sentence punctuation
+    if text.endswith(('.', '!', '?', ',')):
+        return False
+    
+    # Must be title case (each word capitalized)
+    if not all(w[0].isupper() and w[1:].islower() for w in words if len(w) > 1):
+        return False
+    
+    # Exclude common sentence starters/words
+    exclude_words = {
+        'the', 'this', 'that', 'these', 'those', 'a', 'an', 'and', 'or', 'but',
+        'for', 'with', 'from', 'to', 'in', 'on', 'at', 'by', 'as', 'is', 'are',
+        'was', 'were', 'will', 'would', 'could', 'should', 'must', 'can', 'may'
+    }
+    if any(word.lower() in exclude_words for word in words):
+        return False
+    
+    # Must contain at least one "heading-like" word
+    heading_indicators = {
+        'overview', 'summary', 'introduction', 'conclusion', 'background',
+        'approach', 'method', 'results', 'discussion', 'timeline', 'milestones',
+        'requirements', 'criteria', 'funding', 'membership', 'guidelines',
+        'policies', 'procedures', 'services', 'resources', 'tools', 'support'
+    }
+    
+    # Allow if contains heading indicators OR is very short and title-case
+    has_heading_word = any(word.lower() in heading_indicators for word in words)
+    is_short_title = len(words) <= 3 and len(text) <= 25
+    
+    return has_heading_word or is_short_title
 def get_text_statistics(text_blocks: List[TextBlock]) -> Dict:
     """
     Get basic statistics about the text
